@@ -9,14 +9,25 @@ let teamLeaderAnswer = ''
 
 
 let teamNumQues = [
-  'Who is the team leader?',
-  'How many team members?'
+  'How many total team members are there?'
+]
+
+let managerQuestions = [
+  'Please enter the name of the manager?',
+ 'What is the office number?'
+]
+
+let engineerQuestions= [
+  'What is your gitHub? '
+]
+
+let internQuestions = [
+  'What is the school that you attend?'
 ]
 
 let questions = [
-  '',
-  'What is your favorite movie?',
-  'When is your birthday?',
-  'What is your favorite book?',
-  ''
+  'What is your name?',
+  'What is id?',
+  'What is your email?'
+  'What is role?',
 ]
