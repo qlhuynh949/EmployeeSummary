@@ -79,9 +79,10 @@ async function askTeamMembers(teamNumber) {
       message: questions[0]
     },
     {
-      type: 'input',
+      type: 'list',
       name: `memberRole`,
-      message: questions[3]
+      message: questions[3],
+      choices: ["Engineer", "Intern"]
     }])
       .then(({ memberName, memberRole }) => {
         currentName = memberName
@@ -129,7 +130,8 @@ async function askTeamMembers(teamNumber) {
       }
       ]).then(({ memberId, memberEmail, memberSchool }) => {
 
-        let internMember = new Intern(currentName, memberId, memberEmail, memberSchool)
+        let internMember = new Intern(currentName, memberId, 
+          memberEmail, memberSchool)
 
         teamMembersArr.push(internMember)
       }
@@ -138,63 +140,14 @@ async function askTeamMembers(teamNumber) {
     }
   }
 
+  
   // display each team member
   teamMembersArr.forEach((elem, i) => {
     console.log(elem)
 
   })
 
-
-
 }
 
-async function askInternMember(memberName) {
-  const internPrompt = await prompt([{
-    type: 'input',
-    name: `memberId`,
-    message: questions[1]
-  }, {
-    type: 'input',
-    name: `memberEmail`,
-    message: questions[2]
-  },
-  {
-    type: 'input',
-    name: `memberSchool`,
-    message: internQuestions[0]
-  }
-  ]).then(({ memberId, memberEmail, memberSchool }) => {
-
-    let internMember = new Intern(memberName, memberId, memberEmail, memberSchool)
-
-    teamMembersArr.push(internMember)
-  }
-  )
-}
-
-async function askEngineerMember(memberName) {
-  const engineerPrompt = await prompt([{
-    type: 'input',
-    name: `memberId`,
-    message: questions[1]
-  }, {
-    type: 'input',
-    name: `memberEmail`,
-    message: questions[2]
-  },
-  {
-    type: 'input',
-    name: `memberGithub`,
-    message: engineerQuestions[0]
-  }
-  ]).then(({ memberId, memberEmail, memberGithub }) => {
-
-    let engineerMember = new Engineer(memberName, memberId, memberEmail, memberGithub)
-
-    teamMembersArr.push(engineerMember)
-
-  }
-  )
-}
 
 startQuestions()
