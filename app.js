@@ -3,8 +3,10 @@ const Employee = require('./lib/Employee')
 const Engineer = require('./lib/Engineer')
 const Intern = require('./lib/Intern')
 const Manager = require('./lib/Manager')
+const fs = require('fs')
+const Handlebars = require('handlebars')
 let teamMembersArr = []
-
+let gHTML = ''
 
 let teamNumQues = [
   'How many total team members are there?'
@@ -79,9 +81,10 @@ async function askTeamMembers(teamNumber) {
       message: questions[0]
     },
     {
-      type: 'input',
+      type: 'list',
       name: `memberRole`,
-      message: questions[3]
+      message: questions[3],
+      choices: ["Engineer", "Intern"]
     }])
       .then(({ memberName, memberRole }) => {
         currentName = memberName
@@ -129,7 +132,8 @@ async function askTeamMembers(teamNumber) {
       }
       ]).then(({ memberId, memberEmail, memberSchool }) => {
 
-        let internMember = new Intern(currentName, memberId, memberEmail, memberSchool)
+        let internMember = new Intern(currentName, memberId,
+          memberEmail, memberSchool)
 
         teamMembersArr.push(internMember)
       }
@@ -138,63 +142,51 @@ async function askTeamMembers(teamNumber) {
     }
   }
 
+
   // display each team member
+  let htmlData = ''
+
   teamMembersArr.forEach((elem, i) => {
-    console.log(elem)
+    if (elem instanceof Manager) {
+      let managerSrc = readTemplateFile('./templates/manager.html')
+      let managerTemplate = Handlebars.compile(managerSrc)
+      let resultManager = managerTemplate(elem);
+      htmlData += resultManager
+    }
+    else if (elem instanceof Intern) {
+      let InternSrc = readTemplateFile('./templates/intern.html')
+      let InternTemplate = Handlebars.compile(InternSrc)
+      let resultIntern = InternTemplate(elem);
+      htmlData += resultIntern
+    }
+    else {
+      let EngineerSrc = readTemplateFile('./templates/engineer.html')
+      let EngineerTemplate = Handlebars.compile(EngineerSrc);
+      let resultEngineer = EngineerTemplate(elem);
+      htmlData += resultEngineer
+
+    }
 
   })
 
+  let mainSrc = readTemplateFile('./templates/main.html')
+  let mainTemplate = Handlebars.compile(mainSrc);
+  let data = { data: htmlData }
+  let resultMain = mainTemplate(data);
 
 
+  writeToFile('./output/Team.html', resultMain)
 }
 
-async function askInternMember(memberName) {
-  const internPrompt = await prompt([{
-    type: 'input',
-    name: `memberId`,
-    message: questions[1]
-  }, {
-    type: 'input',
-    name: `memberEmail`,
-    message: questions[2]
-  },
-  {
-    type: 'input',
-    name: `memberSchool`,
-    message: internQuestions[0]
-  }
-  ]).then(({ memberId, memberEmail, memberSchool }) => {
-
-    let internMember = new Intern(memberName, memberId, memberEmail, memberSchool)
-
-    teamMembersArr.push(internMember)
-  }
-  )
+const readTemplateFile = (fileName) => {
+  return fs.readFileSync(fileName, 'utf8');
 }
 
-async function askEngineerMember(memberName) {
-  const engineerPrompt = await prompt([{
-    type: 'input',
-    name: `memberId`,
-    message: questions[1]
-  }, {
-    type: 'input',
-    name: `memberEmail`,
-    message: questions[2]
-  },
-  {
-    type: 'input',
-    name: `memberGithub`,
-    message: engineerQuestions[0]
-  }
-  ]).then(({ memberId, memberEmail, memberGithub }) => {
-
-    let engineerMember = new Engineer(memberName, memberId, memberEmail, memberGithub)
-
-    teamMembersArr.push(engineerMember)
-
-  }
-  )
+const writeToFile = (fileName, data) => {
+  fs.writeFile(fileName, data, (err) => {
+    if (err) throw err;
+    console.log('Saved!');
+  });
 }
 
 startQuestions()

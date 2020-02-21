@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/qlhuynh949/EmployeeSummary#readme",
   "dependencies": {
+    "handlebars": "^4.7.3",
     "inquirer": "^7.0.4",
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "mustache": "^4.0.0"
   }
 }
