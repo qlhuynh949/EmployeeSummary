@@ -174,7 +174,6 @@ async function askTeamMembers(teamNumber) {
   let data = { data: htmlData }
   let resultMain = mainTemplate(data);
 
-
   writeToFile('./output/Team.html', resultMain)
 }
 
